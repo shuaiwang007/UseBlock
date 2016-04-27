@@ -9,6 +9,9 @@
 #import "ViewController.h"
 #import "twoViewController.h"
 
+typedef  void(^returnValueBlock)(NSString *name, NSInteger age); // block作为参数返回值
+typedef  void(^funcParamBlock)(NSString *name2, NSInteger age2);      // block作为函数参数
+
 @interface ViewController ()
 
 @property(nonatomic, strong) UITextField *textField;
@@ -87,7 +90,8 @@
     TypeName blockName = ^returnType(parameters) {...};
 */
     
-    
+    [self test];
+    [self test2];
     
 }
 
@@ -120,6 +124,28 @@
     
 }
 
+
+// block作为参数返回值test 供外界调用
+- (returnValueBlock)testBlock {
+    returnValueBlock block = ^(NSString *name, NSInteger age){
+        NSLog(@"%@---%ld", name, (long)age);
+    };
+    return [block copy];
+}
+- (void)test{
+    returnValueBlock block = [self testBlock];
+    block(@"wsws", 40);
+}
+
+// block作为函数参数test
+- (void)func:(funcParamBlock)funcParamBlockTest {
+    funcParamBlockTest(@"wwww", 55);    //在方法的实现里给block回调传值。一般由于处理网络请求的回调。
+}
+- (void)test2 {
+    [self func:^(NSString *name2, NSInteger age2) {
+        NSLog(@"%@---%ld", name2, (long)age2);
+    }];
+}
 
 
 - (void)didReceiveMemoryWarning {
